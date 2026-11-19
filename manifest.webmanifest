@@ -2,12 +2,11 @@
   "id": "./",
   "name": "さいわいさん",
   "short_name": "さいわいさん",
-  "description": "さいわいな部屋のセットリスト・持ち曲管理",
+  "description": "さいわいな部屋の曲リスト・練習タイテ・セトリ作成",
   "lang": "ja",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait-primary",
   "background_color": "#F0F8F3",
   "theme_color": "#3CB371",
   "icons": [

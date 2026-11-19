@@ -2,6 +2,14 @@
 /* さいわいさん PWA — オリジナル SwiftUI 版のデータと操作を移植 */
 (() => {
   const STORAGE_KEY = 'saiwai.pwa.state.v1';
+  const PRACTICE_PRESETS = [
+    {key:'prep', title:'準備', minutes:20},
+    {key:'run', title:'通し', minutes:30},
+    {key:'section', title:'セクション', minutes:25},
+    {key:'buffer', title:'バッファ', minutes:10},
+    {key:'break', title:'休憩', minutes:10},
+    {key:'cleanup', title:'片付け', minutes:10}
+  ];
   const INTERLUDES = ['-----tuning-----', '-----MC-----', '-----ミニMC-----', '（イントロ追加）'];
   const $app = document.querySelector('#app');
   const $modals = document.querySelector('#modal-root');
@@ -9,6 +17,7 @@
   const icons = {
     list: '<path d="M8 6h13M8 12h13M8 18h13"/><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>',
     music: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 3"/>',
     bird: '<path d="M16 7c-3-4-9-2-10 3-1 3 1 7 4 8 5 2 10-2 10-7 0-2-1-4-4-4Z"/><path d="m19 11 4-1-4-2M6 14c-2 2-3 4-3 6M10 19l-1 3M14 19l1 3"/><circle cx="17" cy="9" r=".65" fill="currentColor"/>',
     plus: '<path d="M12 5v14M5 12h14"/>',
     copy: '<rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/>',
@@ -28,9 +37,14 @@
   const remainingSeconds = () => state.allottedMinutes * 60 - usedSeconds();
   const currentSaved = () => state.savedSets.find(item => item.id === state.editingSetlistID);
   const pageTitle = () => currentSaved()?.name || '新規セットリスト';
-  const newState = () => ({songs: cloned(INITIAL_SONGS), draft: [], savedSets: [], allottedMinutes:30, editingSetlistID:null});
-  let state = newState(), activeTab = 'setlist', activeModal = null, editingSongId = null;
-  let toastTimer, positions = {draft:0, picker:0, library:0}, currentDrag = null;
+  const currentPracticeSaved = () => state.savedPractices.find(item => item.id === state.editingPracticeID);
+  const practicePageTitle = () => currentPracticeSaved()?.name || '新規練習タイテ';
+  const practiceUsedMinutes = () => state.practiceDraft.reduce((sum, item) => sum + item.minutes, 0);
+  const newState = () => ({songs: cloned(INITIAL_SONGS), draft: [], savedSets: [], allottedMinutes:30, editingSetlistID:null,
+    practiceDraft:[], practiceMinutes:120, savedPractices:[], editingPracticeID:null, librarySort:'capo'});
+  let state = newState(), activeTab = 'library', activeModal = null, editingSongId = null;
+  let toastTimer, positions = {draft:0, picker:0, library:0, practice:0, practicePicker:0}, currentDrag = null;
+
 
   function cleanSong(s) {
     if (!s || typeof s !== 'object' || typeof s.title !== 'string' || !Number.isInteger(s.durationSeconds) || s.durationSeconds < 0 || s.durationSeconds > 99999) throw Error('曲データが不正です');
@@ -50,7 +64,24 @@
     });
     const minute = Number.isInteger(raw.allottedMinutes) && raw.allottedMinutes >= 0 && raw.allottedMinutes <= 999 ? raw.allottedMinutes : 30;
     const editingId = typeof raw.editingSetlistID === 'string' && savedSets.some(x=>x.id===raw.editingSetlistID) ? raw.editingSetlistID : null;
-    return {songs:raw.songs.map(cleanSong), draft:raw.draft.map(entry), savedSets, allottedMinutes:minute, editingSetlistID:editingId};
+    const cleanPractice = e => {
+      if (!e || typeof e !== 'object' || !PRACTICE_PRESETS.some(p=>p.key===e.key)) throw Error('練習項目が不正です');
+      const mins = Number(e.minutes);
+      if (!Number.isInteger(mins) || mins < 5 || mins > 240 || mins % 5) throw Error('練習項目の時間が不正です');
+      return {id:typeof e.id==='string'?e.id.slice(0,100):uid(),key:e.key,minutes:mins,notes:typeof e.notes==='string'?e.notes.slice(0,2000):''};
+    };
+    const savedPractices = Array.isArray(raw.savedPractices) ? raw.savedPractices.slice(0,1000).map(p => {
+      if (!p || typeof p.name !== 'string' || !Array.isArray(p.entries) || p.entries.length>2000) throw Error('練習タイテ形式が不正です');
+      return {id:typeof p.id==='string'?p.id.slice(0,100):uid(),name:p.name.slice(0,200),practiceMinutes:Number.isInteger(p.practiceMinutes)&&p.practiceMinutes>=0&&p.practiceMinutes<=999?p.practiceMinutes:120,entries:p.entries.map(cleanPractice),savedAt:typeof p.savedAt==='string'?p.savedAt:new Date().toISOString()};
+    }):[];
+    const pDraft=Array.isArray(raw.practiceDraft)&&raw.practiceDraft.length<=2000?raw.practiceDraft.map(cleanPractice):[];
+    const practiceMinutes=Number.isInteger(raw.practiceMinutes)&&raw.practiceMinutes>=0&&raw.practiceMinutes<=999?raw.practiceMinutes:120;
+    const practiceId=typeof raw.editingPracticeID==='string'&&savedPractices.some(p=>p.id===raw.editingPracticeID)?raw.editingPracticeID:null;
+    // 旧版に保存した曲・セトリは維持し、新規追加された初期曲のみ補完する。
+    const songs=raw.songs.map(cleanSong);
+    for(const song of INITIAL_SONGS)if(!songs.some(s=>s.id===song.id))songs.push(cloned(song));
+    return {songs, draft:raw.draft.map(entry), savedSets, allottedMinutes:minute, editingSetlistID:editingId,
+      practiceDraft:pDraft, practiceMinutes, savedPractices, editingPracticeID:practiceId, librarySort:raw.librarySort==='name'?'name':'capo'};
   }
   function loadState() {
     try { const value = localStorage.getItem(STORAGE_KEY); return value ? validateState(JSON.parse(value)) : newState(); }
@@ -61,24 +92,28 @@
     catch (e) {console.error(e); notice('保存できません。端末のストレージ設定を確認してください');return false;}
   }
   function notice(message) { $toast.textContent = message; $toast.classList.add('visible'); clearTimeout(toastTimer); toastTimer = setTimeout(()=>$toast.classList.remove('visible'),2500); }
-  function songsIn(group) {
+  const nameCompare = (a,b) => a.title.localeCompare(b.title, 'ja', {numeric:true, sensitivity:'base'});
+  function songsIn(group, sortMode="capo") {
     return state.songs.map((song,index)=>({song,index})).filter(x=> group === '曲' ? !isInterlude(x.song) : isInterlude(x.song))
-      .sort((a,b) => group === 'MCなど' ? INTERLUDES.indexOf(a.song.title)-INTERLUDES.indexOf(b.song.title) : ((a.song.capo ?? 999)-(b.song.capo ?? 999) || a.index-b.index)).map(x=>x.song);
+      .sort((a,b) => group === 'MCなど' ? INTERLUDES.indexOf(a.song.title)-INTERLUDES.indexOf(b.song.title) : (sortMode==='name' ? nameCompare(a.song,b.song) || a.index-b.index : (a.song.capo ?? 999)-(b.song.capo ?? 999) || a.index-b.index)).map(x=>x.song);
   }
   function recordScrolls() {
-    for(const kind of ['draft','picker','library']) { const elem=document.querySelector(`[data-scroll="${kind}"]`); if(elem) positions[kind]=elem.scrollTop; }
+    for(const kind of ['draft','picker','library','practice','practicePicker']) { const elem=document.querySelector(`[data-scroll="${kind}"]`); if(elem) positions[kind]=elem.scrollTop; }
   }
   function restoreScrolls() {
-    for(const kind of ['draft','picker','library']) { const elem=document.querySelector(`[data-scroll="${kind}"]`); if(elem) elem.scrollTop=positions[kind]; }
+    for(const kind of ['draft','picker','library','practice','practicePicker']) { const elem=document.querySelector(`[data-scroll="${kind}"]`); if(elem) elem.scrollTop=positions[kind]; }
   }
   function topbar() {
-    const title = activeTab === 'setlist' ? pageTitle() : (activeTab === 'library' ? '持ち曲' : '文鳥');
-    let left = '', right = '';
-    if(activeTab === 'setlist') {
-      left = '<button class="new-button" data-action="new" title="新規セットリスト">新規</button>';
-      right = `<button data-action="save" title="セットリストを保存" aria-label="セットリストを保存">${icon('save')}</button><button data-action="copy" title="コピー" aria-label="コピー" ${state.draft.length?'':'disabled'}>${icon('copy')}</button><button data-action="saved" title="保存済みセットリスト" aria-label="保存済みセットリスト">${icon('folder')}</button>`;
-    } else if(activeTab === 'library') {
-      right = `<button data-action="add-song" title="持ち曲を追加" aria-label="持ち曲を追加">${icon('plus')}</button>`;
+    const title=activeTab==='setlist'?pageTitle():activeTab==='practice'?practicePageTitle():'曲リスト';
+    let left='',right='';
+    if(activeTab==='setlist'){
+      left='<button class="new-button" data-action="new" title="新規セットリスト">新規</button>';
+      right=`<button data-action="save" title="セトリを保存" aria-label="セトリを保存">${icon('save')}</button><button data-action="copy" title="コピー" aria-label="コピー" ${state.draft.length?'':'disabled'}>${icon('copy')}</button><button data-action="saved" title="保存済みセトリ" aria-label="保存済みセトリ">${icon('folder')}</button>`;
+    }else if(activeTab==='practice'){
+      left='<button class="new-button" data-action="practice-new" title="新規練習タイテ">新規</button>';
+      right=`<button data-action="practice-save" title="練習タイテを保存" aria-label="練習タイテを保存">${icon('save')}</button><button data-action="practice-copy" title="コピー" aria-label="コピー" ${state.practiceDraft.length?'':'disabled'}>${icon('copy')}</button><button data-action="practice-saved" title="保存済み練習タイテ" aria-label="保存済み練習タイテ">${icon('folder')}</button>`;
+    }else{
+      right=`<button data-action="add-song" title="持ち曲を追加" aria-label="持ち曲を追加">${icon('plus')}</button>`;
     }
     return `<header class="topbar"><div class="topbar-side">${left}</div><div class="topbar-title" title="${esc(title)}">${esc(title)}</div><div class="topbar-side right">${right}</div></header>`;
   }
@@ -98,25 +133,41 @@
     return `${timebar()}<div class="columns"><section class="col"><div class="col-label">SETLIST</div><div class="col-scroll" data-scroll="draft" aria-label="セットリスト、ドラッグで並べ替え">${state.draft.length? state.draft.map(draftRow).join('') : '<p class="empty-col">右側の曲をタップして追加</p>'}</div></section><div class="v-divider"></div><section class="col"><div class="col-label">持ち曲（タップで追加）</div><div class="col-scroll" data-scroll="picker" aria-label="持ち曲一覧">${['曲','MCなど'].map(group=>`<div class="song-group-title">${group}</div>${songsIn(group).map(pickerRow).join('')}`).join('')}</div></section></div>`;
   }
   function songLibraryPage() {
-    return `<div class="library-page" data-scroll="library">${['曲','MCなど'].map(group=>`<section><h2>${group}</h2>${songsIn(group).map(song=>{
-      const other = isInterlude(song);
-      const body = `<span class="title">${esc(song.title)}</span><span class="sub">${esc(metadata(song))}</span>`;
-      return other?`<div class="library-page-row other">${body}</div>`:`<button class="library-page-row" data-action="edit-song" data-id="${esc(song.id)}" aria-label="${esc(song.title)} を編集">${body}</button>`;
-    }).join('')}</section>`).join('')}</div>`;
+    const songs=songsIn('曲',state.librarySort);
+    return `<div class="library-page" data-scroll="library"><div class="library-toolbar"><div><strong>持ち曲一覧</strong><span class="list-count">${songs.length}曲</span></div><div class="sort-switch" role="group" aria-label="曲リストの並び替え"><button data-action="sort-songs" data-sort="capo" class="${state.librarySort==='capo'?'selected':''}" aria-pressed="${state.librarySort==='capo'}">Capo順</button><button data-action="sort-songs" data-sort="name" class="${state.librarySort==='name'?'selected':''}" aria-pressed="${state.librarySort==='name'}">名前順 ↑</button></div></div>
+      <div class="song-table-head"><span>曲名</span><span>Capo</span><span>BPM</span><span>演奏時間</span></div>
+      <div class="song-table">${songs.map(song=>`<button class="song-table-row" data-action="edit-song" data-id="${esc(song.id)}" aria-label="${esc(song.title)} を編集"><span class="song-title">${esc(song.title)}</span><span class="song-value">${song.capo??'—'}</span><span class="song-value">${song.bpm??'—'}</span><span class="song-value">${formatTime(song.durationSeconds)}</span></button>`).join('')}</div>
+      <p class="library-tip">曲をタップすると内容を編集できます。右上の＋で曲を追加できます。</p></div>`;
   }
-  function bunchoPage() {return `<div class="buncho-page"><img src="./assets/buncho.jpg" alt="ケージに並んでとまっている2羽の文鳥の写真"></div>`;}
+  function practiceTimebar() {
+    const remaining=state.practiceMinutes-practiceUsedMinutes();
+    return `<div class="time-bar"><strong id="practice-remaining" class="time-left ${remaining<0?'over':''}">残り ${remaining}分</strong><span class="spacer"></span><label class="time-label" for="practice-minutes">練習時間</label><input class="minutes-input" aria-label="練習時間（分）" id="practice-minutes" type="number" inputmode="numeric" min="0" max="999" value="${state.practiceMinutes}"><span class="time-unit">分</span></div>`;
+  }
+  function practiceDurationOptions(current) {
+    return Array.from({length:48},(_,i)=>(i+1)*5).map(n=>`<option value="${n}" ${n===current?'selected':''}>${n}分</option>`).join('');
+  }
+  function practiceRow(entry) {
+    const preset=PRACTICE_PRESETS.find(p=>p.key===entry.key);
+    return `<div class="song-row practice-row" data-practice-id="${esc(entry.id)}"><div class="draft-head"><button class="row-mini drag-handle" title="ドラッグで並べ替え" aria-label="${esc(preset.title)} を並べ替え">⠿</button><div class="draft-title">${esc(preset.title)}</div><button class="row-mini remove" data-action="practice-remove" data-id="${esc(entry.id)}" aria-label="${esc(preset.title)} を削除">×</button></div><div class="practice-editor"><label class="practice-duration">時間 <select data-practice-duration="${esc(entry.id)}" aria-label="${esc(preset.title)} の時間">${practiceDurationOptions(entry.minutes)}</select></label><label class="practice-note-label" for="practice-note-${esc(entry.id)}">備考</label><textarea id="practice-note-${esc(entry.id)}" data-practice-note="${esc(entry.id)}" placeholder="曲名や練習内容を記入" maxlength="2000" rows="2">${esc(entry.notes)}</textarea></div></div>`;
+  }
+  function practicePage() {
+    return `${practiceTimebar()}<div class="columns practice-columns"><section class="col"><div class="col-label">PRACTICE TIMETABLE <span class="column-count">${state.practiceDraft.length}項目 · 合計${practiceUsedMinutes()}分</span></div><div class="col-scroll" data-scroll="practice" aria-label="練習タイテ、ドラッグで並べ替え">${state.practiceDraft.length?state.practiceDraft.map(practiceRow).join(''):'<p class="empty-col">右側の項目をタップして追加。各項目の時間と備考を編集できます。</p>'}</div></section><div class="v-divider"></div><section class="col"><div class="col-label">練習メニュー（タップで追加）</div><div class="col-scroll practice-options" data-scroll="practicePicker">${PRACTICE_PRESETS.map(p=>`<button class="practice-option" data-action="practice-pick" data-key="${p.key}"><span><strong>${p.title}</strong><small>デフォルト ${p.minutes}分</small></span><span class="plus" aria-hidden="true">⊕</span></button>`).join('')}</div></section></div>`;
+  }
   function tabs() {
-    return `<nav class="bottom-tabs" aria-label="ページ切り替え">${[['setlist','list','セットリスト'],['library','music','持ち曲'],['buncho','bird','文鳥']].map(([key,ico,label])=>`<button class="tab-btn ${key===activeTab?'active':''}" data-action="tab" data-tab="${key}" ${key===activeTab?'aria-current="page"':''}>${icon(ico)}<span>${label}</span></button>`).join('')}</nav>`;
+    return `<nav class="bottom-tabs" aria-label="ページ切り替え">${[['library','music','曲リスト'],['practice','clock','練習タイテ'],['setlist','list','セトリ作成']].map(([key,ico,label])=>`<button class="tab-btn ${key===activeTab?'active':''}" data-action="tab" data-tab="${key}" ${key===activeTab?'aria-current="page"':''}>${icon(ico)}<span>${label}</span></button>`).join('')}</nav>`;
   }
   function render() {
     recordScrolls();
-    $app.innerHTML = `${topbar()}<main class="tab-content">${activeTab==='setlist'?setlistPage():activeTab==='library'?songLibraryPage():bunchoPage()}</main>${tabs()}`;
+    $app.innerHTML = `${topbar()}<main class="tab-content">${activeTab==='setlist'?setlistPage():activeTab==='practice'?practicePage():songLibraryPage()}</main>${tabs()}`;
     restoreScrolls();
     document.title = `さいわいさん${activeTab==='setlist' ? ' - '+pageTitle():''}`;
   }
   function refreshRemaining() {
-    const el=document.querySelector('#remaining-label');if(!el)return;
-    const remain=remainingSeconds();el.textContent=`残り ${formatTime(remain)}`;el.classList.toggle('over',remain<0);
+    const el=document.querySelector('#remaining-label');
+    if(el){const remain=remainingSeconds();el.textContent=`残り ${formatTime(remain)}`;el.classList.toggle('over',remain<0);}
+    const pe=document.querySelector('#practice-remaining');
+    if(pe){const remain=state.practiceMinutes-practiceUsedMinutes();pe.textContent=`残り ${remain}分`;pe.classList.toggle('over',remain<0);}
+    const total=document.querySelector('.column-count');if(total)total.textContent=`${state.practiceDraft.length}項目 · 合計${practiceUsedMinutes()}分`;
   }
   function sheet(title,content,submitLabel='',type='') {
     return `<div class="backdrop" data-action="close-if-backdrop"><section class="sheet" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="sheet-header"><button data-action="close-modal">キャンセル</button><div class="sheet-title">${esc(title)}</div>${submitLabel?`<button type="submit" class="affirmative" form="${type}-form" data-submit="${type}">${esc(submitLabel)}</button>`:'<button data-action="close-modal">閉じる</button>'}</div><div class="sheet-content">${content}</div></section></div>`;
@@ -135,6 +186,37 @@
     const list=state.savedSets.length?state.savedSets.map(saved=>`<div class="saved-item"><button class="saved-open" data-action="restore-saved" data-id="${esc(saved.id)}"><div class="saved-name">${esc(saved.name)}</div><div class="saved-meta">${saved.allottedMinutes}分枠 · ${saved.entries.length}項目 · 使用 ${formatTime(saved.entries.reduce((n,e)=>n+e.song.durationSeconds,0))}</div></button><button class="saved-delete" data-action="delete-saved" data-id="${esc(saved.id)}" aria-label="${esc(saved.name)} を削除">${icon('trash')}</button></div>`).join(''):'<p class="empty-saved">保存済みのセットリストはありません</p>';
     const body=`${list}<div class="action-bar"><button data-action="export">${icon('download')} バックアップ</button><button data-action="import">バックアップ読込</button></div><p class="sheet-note">データはこの端末のブラウザ内に保存されます。端末変更やデータ消去に備えて、バックアップを保存できます。</p><input id="backup-file" type="file" accept="application/json,.json" hidden>`;
     $modals.innerHTML=sheet('保存済みセットリスト',body);
+  }
+  function showPracticeSave() {
+    activeModal='practice-save';const saved=currentPracticeSaved();
+    const body=`<form id="practice-save-form" data-form="practice-save"><div class="form-section-title">練習タイテ名</div><div class="form-group"><label class="field"><input id="practice-save-name" name="name" type="text" maxlength="200" placeholder="例：11/23 スタジオ練習" value="${esc(saved?.name||'')}" required></label>${saved?'<label class="field"><span class="field-label">別のタイテとして保存</span><input type="checkbox" name="copy"></label>':''}</div><div class="form-section-title">保存する内容</div><div class="form-group form-stats">練習時間：${state.practiceMinutes}分<br>項目数：${state.practiceDraft.length}<br>合計：${practiceUsedMinutes()}分</div></form>`;
+    $modals.innerHTML=sheet('練習タイテを保存',body,saved?'上書き保存':'保存','practice-save');
+    const input=$modals.querySelector('#practice-save-name');input?.focus();updatePracticeSaveButton();
+  }
+  function updatePracticeSaveButton(){const b=$modals.querySelector('[data-submit="practice-save"]');if(!b)return;b.disabled=!$modals.querySelector('#practice-save-name')?.value.trim();b.textContent=currentPracticeSaved()&&!$modals.querySelector('#practice-save-form [name="copy"]')?.checked?'上書き保存':'保存';}
+  function submitPracticeSave() {
+    const name=$modals.querySelector('#practice-save-name')?.value.trim();if(!name)return;
+    const isCopy=!!$modals.querySelector('#practice-save-form [name="copy"]')?.checked;
+    const id=isCopy?uid():(state.editingPracticeID||uid());
+    const saved={id,name,practiceMinutes:state.practiceMinutes,entries:cloned(state.practiceDraft),savedAt:new Date().toISOString()};
+    state.savedPractices=state.savedPractices.filter(p=>p.id!==id);state.savedPractices.unshift(saved);state.editingPracticeID=id;
+    persist();closeModal();render();notice('練習タイテを保存しました');
+  }
+  function showPracticeSaved() {
+    activeModal='practice-saved';
+    const list=state.savedPractices.length?state.savedPractices.map(p=>`<div class="saved-item"><button class="saved-open" data-action="practice-restore" data-id="${esc(p.id)}"><div class="saved-name">${esc(p.name)}</div><div class="saved-meta">${p.practiceMinutes}分枠 · ${p.entries.length}項目 · 合計 ${p.entries.reduce((n,e)=>n+e.minutes,0)}分</div></button><button class="saved-delete" data-action="practice-delete" data-id="${esc(p.id)}" aria-label="${esc(p.name)} を削除">${icon('trash')}</button></div>`).join(''):'<p class="empty-saved">保存済みの練習タイテはありません</p>';
+    const body=`${list}<div class="action-bar"><button data-action="export">${icon('download')} バックアップ</button><button data-action="import">バックアップ読込</button></div><p class="sheet-note">端末内に保存されます。セトリ・持ち曲・練習タイテをまとめてバックアップできます。</p><input id="backup-file" type="file" accept="application/json,.json" hidden>`;
+    $modals.innerHTML=sheet('保存済み練習タイテ',body);
+  }
+  function newPractice() {
+    if(state.practiceDraft.length&&!window.confirm('新規練習タイテを作成しますか？\n未保存の編集内容は破棄されます。'))return;
+    state.editingPracticeID=null;state.practiceDraft=[];positions.practice=0;persist();render();
+  }
+  function practiceClipboardText(){return ['＝＝＝＝＝＝＝',practicePageTitle(),`練習時間 ${state.practiceMinutes}分`,`合計 ${practiceUsedMinutes()}分`,'',...state.practiceDraft.map((e,i)=>{const p=PRACTICE_PRESETS.find(p=>p.key===e.key);return `${i+1}. ${p.title}　${e.minutes}分${e.notes?'\n   '+e.notes:''}`;}),'＝＝＝＝＝＝＝'].join('\n');}
+  async function practiceCopy() {
+    const txt=practiceClipboardText();
+    try{await navigator.clipboard.writeText(txt);notice('練習タイテをコピーしました');}
+    catch(_){const area=document.createElement('textarea');area.value=txt;document.body.append(area);area.select();const ok=document.execCommand('copy');area.remove();notice(ok?'コピーしました':'コピーできませんでした');}
   }
   function rangeOptions(min,max,selected,suffix) {return Array.from({length:max-min+1},(_,i)=>{const v=i+min;return `<option value="${v}" ${v===selected?'selected':''}>${v}${suffix}</option>`;}).join('');}
   function showEditor(songId=null) {
@@ -183,7 +265,7 @@
     }
   }
   function exportData() {
-    const dump={app:'SaiwaiSan_PWA',version:1,exportedAt:new Date().toISOString(),state};
+    const dump={app:'SaiwaiSan_PWA',version:2,exportedAt:new Date().toISOString(),state};
     const blob=new Blob([JSON.stringify(dump,null,2)],{type:'application/json'});
     const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`saiwai-backup-${new Date().toISOString().slice(0,10)}.json`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);notice('バックアップを保存しました');
   }
@@ -195,7 +277,7 @@
       if(content.app && content.app!=='SaiwaiSan_PWA')throw Error('さいわいさん用のバックアップではありません');
       const data=validateState(content.state||content);
       if(!window.confirm('現在の曲・セットリストをバックアップの内容で置き換えますか？\n現在のデータを残す場合は先にバックアップしてください。'))return;
-      state=data;positions={draft:0,picker:0,library:0};persist();closeModal();render();notice('バックアップを読み込みました');
+      state=data;positions={draft:0,picker:0,library:0,practice:0,practicePicker:0};persist();closeModal();render();notice('バックアップを読み込みました');
     }catch(e){console.error(e);window.alert(`バックアップを読み込めません：${e.message}`);}
   }
   function newSetlist() {
@@ -206,6 +288,15 @@
     const action=button.dataset.action, id=button.dataset.id;
     switch(action) {
       case 'tab': activeTab=button.dataset.tab;render();break;
+      case 'sort-songs':state.librarySort=button.dataset.sort==='name'?'name':'capo';positions.library=0;persist();render();break;
+      case 'practice-pick':{const p=PRACTICE_PRESETS.find(p=>p.key===button.dataset.key);if(!p)return;state.practiceDraft.push({id:uid(),key:p.key,minutes:p.minutes,notes:''});persist();render();break;}
+      case 'practice-remove':state.practiceDraft=state.practiceDraft.filter(e=>e.id!==id);persist();render();break;
+      case 'practice-new':newPractice();break;
+      case 'practice-save':showPracticeSave();break;
+      case 'practice-saved':showPracticeSaved();break;
+      case 'practice-copy':void practiceCopy();break;
+      case 'practice-restore':{const p=state.savedPractices.find(p=>p.id===id);if(!p)return;state.editingPracticeID=p.id;state.practiceMinutes=p.practiceMinutes;state.practiceDraft=cloned(p.entries);positions.practice=0;persist();closeModal();activeTab='practice';render();notice('練習タイテを開きました');break;}
+      case 'practice-delete':{const p=state.savedPractices.find(p=>p.id===id);if(!p)return;if(!window.confirm(`「${p.name}」を削除しますか？`))return;state.savedPractices=state.savedPractices.filter(p=>p.id!==id);if(state.editingPracticeID===id)state.editingPracticeID=null;persist();showPracticeSaved();render();notice('削除しました');break;}
       case 'new':newSetlist();break;
       case 'save':showSave();break;
       case 'copy':void copyToClipboard();break;
@@ -224,35 +315,43 @@
   }
   $app.addEventListener('click', e=>{const b=e.target.closest('[data-action]');if(b&&!b.disabled)handleAction(b);});
   $modals.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b||b.disabled)return;if(b.dataset.action==='close-if-backdrop'&&e.target!==b)return;handleAction(b);});
-  $modals.addEventListener('submit',e=>{e.preventDefault();const form=e.target.dataset.form;if(form==='save')saveForm();if(form==='editor')editorForm();});
-  $modals.addEventListener('input',e=>{if(activeModal==='save')updateSaveButton();if(activeModal==='editor')updateEditorButton();});
-  $modals.addEventListener('change',e=>{if(e.target.id==='backup-file'){void importData(e.target.files?.[0]);}else if(activeModal==='save')updateSaveButton();else if(activeModal==='editor')updateEditorButton();});
-  $app.addEventListener('input',e=>{if(e.target.id!=='minutes')return;const val=Number(e.target.value);if(e.target.value!=='' && Number.isInteger(val)&&val>=0&&val<=999){state.allottedMinutes=val;persist();refreshRemaining();}});
-  $app.addEventListener('change',e=>{if(e.target.id==='minutes'){e.target.value=String(state.allottedMinutes);refreshRemaining();}});
-  $app.addEventListener('focusout',e=>{if(e.target.id==='minutes')e.target.value=String(state.allottedMinutes);});
-  $app.addEventListener('keydown',e=>{if(e.target.id==='minutes'&&e.key==='Enter')e.target.blur();});
+  $modals.addEventListener('submit',e=>{e.preventDefault();const form=e.target.dataset.form;if(form==='save')saveForm();if(form==='editor')editorForm();if(form==='practice-save')submitPracticeSave();});
+  $modals.addEventListener('input',e=>{if(activeModal==='save')updateSaveButton();if(activeModal==='editor')updateEditorButton();if(activeModal==='practice-save')updatePracticeSaveButton();});
+  $modals.addEventListener('change',e=>{if(e.target.id==='backup-file'){void importData(e.target.files?.[0]);}else if(activeModal==='save')updateSaveButton();else if(activeModal==='editor')updateEditorButton();else if(activeModal==='practice-save')updatePracticeSaveButton();});
+  $app.addEventListener('input',e=>{
+    if(e.target.dataset.practiceNote){const item=state.practiceDraft.find(p=>p.id===e.target.dataset.practiceNote);if(item){item.notes=e.target.value.slice(0,2000);persist();}return;}
+    if(e.target.id==='practice-minutes'){const v=Number(e.target.value);if(e.target.value!==''&&Number.isInteger(v)&&v>=0&&v<=999){state.practiceMinutes=v;persist();refreshRemaining();}return;}
+    if(e.target.id!=='minutes')return;const val=Number(e.target.value);if(e.target.value!=='' && Number.isInteger(val)&&val>=0&&val<=999){state.allottedMinutes=val;persist();refreshRemaining();}});
+  $app.addEventListener('change',e=>{
+    if(e.target.dataset.practiceDuration){const entry=state.practiceDraft.find(p=>p.id===e.target.dataset.practiceDuration);const val=Number(e.target.value);if(entry&&Number.isInteger(val)&&val>=5&&val<=240&&val%5===0){entry.minutes=val;persist();refreshRemaining();}return;}
+    if(e.target.id==='practice-minutes'){e.target.value=String(state.practiceMinutes);refreshRemaining();return;}
+    if(e.target.id==='minutes'){e.target.value=String(state.allottedMinutes);refreshRemaining();}
+  });
+  $app.addEventListener('focusout',e=>{if(e.target.id==='minutes')e.target.value=String(state.allottedMinutes);if(e.target.id==='practice-minutes')e.target.value=String(state.practiceMinutes);});
+  $app.addEventListener('keydown',e=>{if((e.target.id==='minutes'||e.target.id==='practice-minutes')&&e.key==='Enter')e.target.blur();});
 
   // Pointer Events は iPhone のタッチ操作でも動作。持ち手⠿をドラッグして順序変更。
   $app.addEventListener('pointerdown', e => {
-    const handle=e.target.closest('.drag-handle');if(!handle||e.button!==0||activeTab!=='setlist')return;
-    const row=handle.closest('[data-entry-id]');if(!row)return;
-    currentDrag={pointerId:e.pointerId,sourceId:row.dataset.entryId,startY:e.clientY,targetId:null,moved:false,handle};
+    const handle=e.target.closest('.drag-handle');if(!handle||e.button!==0||(activeTab!=='setlist'&&activeTab!=='practice'))return;
+    const row=handle.closest('[data-entry-id],[data-practice-id]');if(!row)return;
+    currentDrag={pointerId:e.pointerId,kind:activeTab,sourceId:row.dataset.entryId||row.dataset.practiceId,startY:e.clientY,targetId:null,moved:false,handle};
     try{handle.setPointerCapture(e.pointerId);}catch(_){}
   });
   $app.addEventListener('pointermove', e=>{
     if(!currentDrag||e.pointerId!==currentDrag.pointerId)return;
     if(!currentDrag.moved&&Math.abs(e.clientY-currentDrag.startY)<8)return;
     currentDrag.moved=true;
-    const source=document.querySelector(`[data-entry-id="${CSS.escape(currentDrag.sourceId)}"]`);
+    const attr=currentDrag.kind==='practice'?'data-practice-id':'data-entry-id';
+    const source=[...$app.querySelectorAll(`[${attr}]`)].find(el=>el.getAttribute(attr)===currentDrag.sourceId);
     if(source)source.classList.add('dragging');
     document.querySelectorAll('.drop-target').forEach(row=>row.classList.remove('drop-target'));
-    const col=$app.querySelector('[data-scroll="draft"]');
-    let target=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-entry-id]');
+    const col=$app.querySelector(`[data-scroll="${currentDrag.kind==='practice'?'practice':'draft'}"]`);
+    let target=document.elementFromPoint(e.clientX,e.clientY)?.closest(`[${attr}]`);
     if(!target && col) {
-      const rows=[...col.querySelectorAll('[data-entry-id]')];
+      const rows=[...col.querySelectorAll(`[${attr}]`)];
       target=rows.find(row=>e.clientY<=row.getBoundingClientRect().bottom) || rows.at(-1);
     }
-    if(target&&target.dataset.entryId!==currentDrag.sourceId){currentDrag.targetId=target.dataset.entryId;target.classList.add('drop-target');}
+    if(target&&target.getAttribute(attr)!==currentDrag.sourceId){currentDrag.targetId=target.getAttribute(attr);target.classList.add('drop-target');}
   });
   function endDrag(e){
     if(!currentDrag||e.pointerId!==currentDrag.pointerId)return;
@@ -260,9 +359,10 @@
     if(drag.handle.hasPointerCapture?.(e.pointerId))try{drag.handle.releasePointerCapture(e.pointerId);}catch(_){}
     document.querySelectorAll('.dragging,.drop-target').forEach(row=>row.classList.remove('dragging','drop-target'));
     if(!drag.moved||!drag.targetId)return;
-    const from=state.draft.findIndex(x=>x.id===drag.sourceId), to=state.draft.findIndex(x=>x.id===drag.targetId);
+    const data=drag.kind==='practice'?state.practiceDraft:state.draft;
+    const from=data.findIndex(x=>x.id===drag.sourceId),to=data.findIndex(x=>x.id===drag.targetId);
     if(from<0||to<0||from===to)return;
-    const [entry]=state.draft.splice(from,1);state.draft.splice(to,0,entry);persist();render();
+    const [entry]=data.splice(from,1);data.splice(to,0,entry);persist();render();
   }
   $app.addEventListener('pointerup',endDrag);$app.addEventListener('pointercancel',endDrag);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&activeModal)closeModal();});

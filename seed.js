@@ -161,6 +161,22 @@ const INITIAL_SONGS = [
     "bpm": 102
   },
   {
+    "id": "20b00000-0000-4000-8000-000000000025",
+    "title": "0時　郵政局",
+    "tuning": "Reg.",
+    "capo": 7,
+    "durationSeconds": 280,
+    "bpm": 192
+  },
+  {
+    "id": "20b00000-0000-4000-8000-000000000026",
+    "title": "さいわい免許センター改",
+    "tuning": "Reg.",
+    "capo": 4,
+    "durationSeconds": 261,
+    "bpm": 88
+  },
+  {
     "id": "20b00000-0000-4000-8000-000000000021",
     "title": "-----tuning-----",
     "tuning": "",

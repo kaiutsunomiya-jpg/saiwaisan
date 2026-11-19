@@ -119,3 +119,88 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline:3px so
 @media (min-width:700px) { .app-shell { border-left:1px solid var(--line); border-right:1px solid var(--line); } .topbar { padding:0 20px; } .col-scroll { padding:0 12px 18px; } .draft-row,.library-row { padding:14px; } .draft-title,.library-row-title { font-size:15px; } .library-row-meta { font-size:12px; } }
 @media (max-width:360px) { .topbar { padding:0 5px; } .topbar-side { width:101px; gap:0; } .topbar-side button { min-width:30px; } .row-mini { width:25px; min-width:25px; } .time-bar { padding-left:7px; padding-right:7px; } .col-scroll { padding:0 4px 10px; } .col-label { padding-left:5px; padding-right:2px; } }
 @media (prefers-reduced-motion:reduce) { .toast { transition:none; } }
+
+/* v2 — PC/スマートフォン両対応の3画面 */
+.app-shell {max-width:1280px; min-height:0;}
+@media (min-width:1000px){
+  .app-shell {border-left:1px solid var(--line);border-right:1px solid var(--line);}
+  .topbar {height:66px;flex-basis:66px;}
+  .topbar-title {font-size:20px;}
+  .bottom-tabs {justify-content:center;gap:18px;}
+  .tab-btn {flex:none;width:min(210px,28vw);flex-direction:row;font-size:15px;gap:9px;height:48px;}
+  .tab-btn:hover,.sort-switch button:hover {background:var(--card);}
+  .tab-btn .icon {width:21px;height:21px;}
+  .columns {grid-template-columns:minmax(0,1.1fr) 1px minmax(0,.9fr);}
+  .col-label {padding:14px 20px 10px;font-size:14px;min-height:47px;}
+  .col-scroll {padding:0 16px 24px;}
+  .song-row {margin-bottom:10px;}
+  .practice-columns {grid-template-columns:minmax(0,1.25fr) 1px minmax(320px,.75fr);}
+}
+/* 曲リストは表形式。幅が狭い画面でも列を折り返さず表示する。 */
+.library-page {width:100%;max-width:1150px;margin:0 auto;padding:18px clamp(12px,3vw,36px) 40px;}
+.library-toolbar {display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap;}
+.library-toolbar strong {font-size:20px;letter-spacing:.02em;}
+.list-count {margin-left:10px;color:var(--secondary);font-size:13px;}
+.sort-switch {display:flex;background:var(--muted);border-radius:11px;padding:4px;gap:3px;}
+.sort-switch button {border:0;color:var(--secondary);background:transparent;border-radius:8px;padding:8px 13px;font-size:13px;font-weight:650;}
+.sort-switch button.selected {color:var(--action);background:var(--white);box-shadow:0 1px 6px #00000012;}
+.song-table-head,.song-table-row {display:grid;grid-template-columns:minmax(0,1fr) 70px 75px 95px;align-items:center;gap:8px;}
+.song-table-head {font-size:12px;color:var(--secondary);font-weight:700;padding:6px 16px 10px;}
+.song-table-head span:not(:first-child) {text-align:center;}
+.song-table-row {width:100%;border:1px solid transparent;text-align:left;background:var(--card);color:var(--ink);border-radius:10px;padding:13px 16px;margin-bottom:7px;min-height:55px;}
+.song-table-row:hover {border-color:var(--action);}
+.song-title {font-weight:730;font-size:15px;overflow-wrap:anywhere;}
+.song-value {text-align:center;font-size:14px;font-variant-numeric:tabular-nums;}
+.library-tip {font-size:12px;color:var(--secondary);line-height:1.6;margin:16px 2px;}
+/* 練習タイテ */
+.column-count {font-weight:500;color:var(--secondary);margin-left:5px;}
+.practice-row {padding:10px 10px 12px;}
+.practice-row .draft-title {font-size:15px;}
+.practice-editor {display:grid;grid-template-columns:minmax(0,1fr);gap:8px;padding:7px 4px 0 30px;}
+.practice-duration {display:flex;justify-content:space-between;align-items:center;gap:7px;color:var(--secondary);font-size:12px;}
+.practice-duration select {width:105px;max-width:100%;height:36px;background:var(--white);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:4px 9px;text-align:center;font-size:14px;}
+.practice-note-label {font-size:12px;color:var(--secondary);}
+.practice-editor textarea {display:block;width:100%;min-height:62px;padding:10px;border:1px solid var(--line);border-radius:9px;background:var(--white);color:var(--ink);font:inherit;font-size:14px;line-height:1.5;resize:vertical;overflow-wrap:anywhere;}
+.practice-editor textarea:focus-visible {outline:2px solid var(--action);}
+.practice-option {display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;border:1px solid transparent;background:var(--card);border-radius:11px;color:var(--ink);padding:14px 15px;margin:0 0 9px;}
+.practice-option:hover {border-color:var(--action);}
+.practice-option span:first-child {display:flex;flex-direction:column;gap:5px;}
+.practice-option strong {font-size:15px;}
+.practice-option small {font-size:12px;color:var(--secondary);}
+.practice-option .plus {font-size:21px;}
+@media (max-width:680px){
+  .topbar {padding:0 8px;gap:2px;}
+  .topbar-side {width:102px;gap:0;}
+  .topbar-side button {min-width:31px;}
+  .topbar-title {font-size:16px;}
+  .song-table-head,.song-table-row {grid-template-columns:minmax(0,1fr) 45px 53px 61px;gap:5px;}
+  .song-table-head {padding:6px 9px 9px;font-size:11px;}
+  .song-table-row {padding:12px 9px;min-height:55px;}
+  .song-title {font-size:13px;}
+  .song-value {font-size:12px;}
+  .library-toolbar {margin-bottom:11px;}
+  .library-toolbar strong {font-size:17px;}
+  .sort-switch button {padding:7px 10px;font-size:12px;}
+  /* タイテの備考編集は2列だと窮屈なので上下に分割。 */
+  .practice-columns {display:flex;flex-direction:column;min-height:0;}
+  .practice-columns .col:first-child {flex:1 1 62%;min-height:0;}
+  .practice-columns .col:last-child {flex:0 1 38%;min-height:120px;}
+  .practice-columns .v-divider {height:1px;width:100%;flex:none;}
+  .practice-row {padding:10px 13px;}
+  .practice-editor {padding-left:30px;}
+  .practice-editor textarea {min-height:56px;}
+  .practice-options {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-content:start;}
+  .practice-option {padding:10px;margin:0;min-height:56px;}
+  .practice-option strong {font-size:13px;}
+  .practice-option small {font-size:10px;}
+  .practice-option .plus {font-size:17px;}
+}
+@media (max-width:380px){
+  .time-label {font-size:11px;}
+  .time-bar {padding-inline:9px;}
+  .col-label {font-size:11px;}
+  .column-count {font-size:10px;}
+  .song-table-head,.song-table-row {grid-template-columns:minmax(0,1fr) 39px 46px 54px;gap:3px;}
+  .song-table-row {padding-inline:7px;}
+  .song-value {font-size:11px;}
+}
