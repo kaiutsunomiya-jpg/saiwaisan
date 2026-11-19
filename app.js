@@ -18,6 +18,7 @@
     list: '<path d="M8 6h13M8 12h13M8 18h13"/><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>',
     music: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
     clock: '<circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 3"/>',
+    metronome: '<path d="M5 20h14M10 20l4-15M7 7h2M14 9l4 3"/><path d="M14 5l4 2"/>',
     bird: '<path d="M16 7c-3-4-9-2-10 3-1 3 1 7 4 8 5 2 10-2 10-7 0-2-1-4-4-4Z"/><path d="m19 11 4-1-4-2M6 14c-2 2-3 4-3 6M10 19l-1 3M14 19l1 3"/><circle cx="17" cy="9" r=".65" fill="currentColor"/>',
     plus: '<path d="M12 5v14M5 12h14"/>',
     copy: '<rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/>',
@@ -104,7 +105,7 @@
     for(const kind of ['draft','picker','library','practice','practicePicker']) { const elem=document.querySelector(`[data-scroll="${kind}"]`); if(elem) elem.scrollTop=positions[kind]; }
   }
   function topbar() {
-    const title=activeTab==='setlist'?pageTitle():activeTab==='practice'?practicePageTitle():'曲リスト';
+    const title=activeTab==='setlist'?pageTitle():activeTab==='practice'?practicePageTitle():activeTab==='metronome'?'メトロノーム':'曲リスト';
     let left='',right='';
     if(activeTab==='setlist'){
       left='<button class="new-button" data-action="new" title="新規セットリスト">新規</button>';
@@ -112,7 +113,7 @@
     }else if(activeTab==='practice'){
       left='<button class="new-button" data-action="practice-new" title="新規練習タイテ">新規</button>';
       right=`<button data-action="practice-save" title="練習タイテを保存" aria-label="練習タイテを保存">${icon('save')}</button><button data-action="practice-copy" title="コピー" aria-label="コピー" ${state.practiceDraft.length?'':'disabled'}>${icon('copy')}</button><button data-action="practice-saved" title="保存済み練習タイテ" aria-label="保存済み練習タイテ">${icon('folder')}</button>`;
-    }else{
+    }else if(activeTab==='library'){
       right=`<button data-action="add-song" title="持ち曲を追加" aria-label="持ち曲を追加">${icon('plus')}</button>`;
     }
     return `<header class="topbar"><div class="topbar-side">${left}</div><div class="topbar-title" title="${esc(title)}">${esc(title)}</div><div class="topbar-side right">${right}</div></header>`;
@@ -154,12 +155,14 @@
     return `${practiceTimebar()}<div class="columns practice-columns"><section class="col"><div class="col-label">PRACTICE TIMETABLE <span class="column-count">${state.practiceDraft.length}項目 · 合計${practiceUsedMinutes()}分</span></div><div class="col-scroll" data-scroll="practice" aria-label="練習タイテ、ドラッグで並べ替え">${state.practiceDraft.length?state.practiceDraft.map(practiceRow).join(''):'<p class="empty-col">右側の項目をタップして追加。各項目の時間と備考を編集できます。</p>'}</div></section><div class="v-divider"></div><section class="col"><div class="col-label">練習メニュー（タップで追加）</div><div class="col-scroll practice-options" data-scroll="practicePicker">${PRACTICE_PRESETS.map(p=>`<button class="practice-option" data-action="practice-pick" data-key="${p.key}"><span><strong>${p.title}</strong><small>デフォルト ${p.minutes}分</small></span><span class="plus" aria-hidden="true">⊕</span></button>`).join('')}</div></section></div>`;
   }
   function tabs() {
-    return `<nav class="bottom-tabs" aria-label="ページ切り替え">${[['library','music','曲リスト'],['practice','clock','練習タイテ'],['setlist','list','セトリ作成']].map(([key,ico,label])=>`<button class="tab-btn ${key===activeTab?'active':''}" data-action="tab" data-tab="${key}" ${key===activeTab?'aria-current="page"':''}>${icon(ico)}<span>${label}</span></button>`).join('')}</nav>`;
+    return `<nav class="bottom-tabs" aria-label="ページ切り替え">${[['library','music','曲リスト'],['practice','clock','練習タイテ'],['setlist','list','セトリ作成'],['metronome','metronome','メトロノーム']].map(([key,ico,label])=>`<button class="tab-btn ${key===activeTab?'active':''}" data-action="tab" data-tab="${key}" ${key===activeTab?'aria-current="page"':''}>${icon(ico)}<span>${label}</span></button>`).join('')}</nav>`;
   }
   function render() {
     recordScrolls();
-    $app.innerHTML = `${topbar()}<main class="tab-content">${activeTab==='setlist'?setlistPage():activeTab==='practice'?practicePage():songLibraryPage()}</main>${tabs()}`;
+    window.SaiwaiMetronome?.unmount();
+    $app.innerHTML = `${topbar()}<main class="tab-content">${activeTab==='setlist'?setlistPage():activeTab==='practice'?practicePage():activeTab==='metronome'?'<div id="metronome-root"></div>':songLibraryPage()}</main>${tabs()}`;
     restoreScrolls();
+    if(activeTab==='metronome')window.SaiwaiMetronome?.mount($app.querySelector('#metronome-root'));
     document.title = `さいわいさん${activeTab==='setlist' ? ' - '+pageTitle():''}`;
   }
   function refreshRemaining() {
@@ -265,7 +268,7 @@
     }
   }
   function exportData() {
-    const dump={app:'SaiwaiSan_PWA',version:2,exportedAt:new Date().toISOString(),state};
+    const dump={app:'SaiwaiSan_PWA',version:3,exportedAt:new Date().toISOString(),state,metronome:window.SaiwaiMetronome?.snapshot()};
     const blob=new Blob([JSON.stringify(dump,null,2)],{type:'application/json'});
     const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`saiwai-backup-${new Date().toISOString().slice(0,10)}.json`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);notice('バックアップを保存しました');
   }
@@ -277,6 +280,7 @@
       if(content.app && content.app!=='SaiwaiSan_PWA')throw Error('さいわいさん用のバックアップではありません');
       const data=validateState(content.state||content);
       if(!window.confirm('現在の曲・セットリストをバックアップの内容で置き換えますか？\n現在のデータを残す場合は先にバックアップしてください。'))return;
+      if(content.metronome)window.SaiwaiMetronome?.importSettings(content.metronome);
       state=data;positions={draft:0,picker:0,library:0,practice:0,practicePicker:0};persist();closeModal();render();notice('バックアップを読み込みました');
     }catch(e){console.error(e);window.alert(`バックアップを読み込めません：${e.message}`);}
   }

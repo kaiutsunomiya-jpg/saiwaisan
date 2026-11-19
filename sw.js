@@ -1,7 +1,7 @@
 /* GitHub Pages のサブディレクトリからでも動作する相対URLのみ使用。 */
-const CACHE_NAME = 'saiwai-san-pwa-v2';
+const CACHE_NAME = 'saiwai-san-pwa-v3';
 const PRE_CACHE = [
-  './', './index.html', './styles.css', './seed.js', './app.js',
+  './', './index.html', './styles.css?v=3', './metronome.css?v=3', './seed.js', './app.js?v=3', './metronome.js?v=3',
   './manifest.webmanifest', './assets/icon-192.png',
   './assets/icon-512.png', './assets/buncho.jpg'
 ];
