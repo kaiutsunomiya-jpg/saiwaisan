@@ -1,37 +1,5 @@
-/* GitHub Pages のサブディレクトリからでも動作する相対URLのみ使用。 */
-const CACHE_NAME = 'saiwai-san-pwa-v3';
-const PRE_CACHE = [
-  './', './index.html', './styles.css?v=3', './metronome.css?v=3', './seed.js', './app.js?v=3', './metronome.js?v=3',
-  './manifest.webmanifest', './assets/icon-192.png',
-  './assets/icon-512.png', './assets/buncho.jpg'
-];
-self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(PRE_CACHE)).then(() => self.skipWaiting()));
-});
-self.addEventListener('activate', event => {
-  event.waitUntil(Promise.all([
-    caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('saiwai-san-pwa-') && key !== CACHE_NAME).map(key => caches.delete(key)))),
-    self.clients.claim()
-  ]));
-});
-self.addEventListener('fetch', event => {
-  const req = event.request;
-  if (req.method !== 'GET') return;
-  const url = new URL(req.url);
-  if (url.origin !== self.location.origin) return;
-  // 更新はネット優先、圏外では前回キャッシュを利用。
-  event.respondWith(
-    fetch(req).then(response => {
-      if (response.ok) {
-        const copy = response.clone();
-        event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.put(req, copy)));
-      }
-      return response;
-    }).catch(async () => {
-      const cached = await caches.match(req);
-      if (cached) return cached;
-      if (req.mode === 'navigate') return caches.match('./index.html');
-      return Response.error();
-    })
-  );
-});
+const CACHE='saiwaisan-test-static-v11';
+const FILES=['./','./index.html','./manifest.webmanifest','./styles.css?v=test11','./cloud-model.js?v=test11','./seed-data.js?v=test11','./bootstrap.js?v=test11','./app.js?v=test11','./metronome.js?v=test11','./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png'];
+self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()));});
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(x=>x.startsWith('saiwaisan-test-static-')&&x!==CACHE).map(x=>caches.delete(x)))).then(()=>self.clients.claim()));});
+self.addEventListener('fetch',e=>{const req=e.request;if(req.method!=='GET'||new URL(req.url).origin!==location.origin)return;e.respondWith(caches.match(req).then(saved=>saved||fetch(req).then(r=>{if(r.ok)caches.open(CACHE).then(c=>c.put(req,r.clone()));return r;})).catch(()=>caches.match('./index.html')));});
