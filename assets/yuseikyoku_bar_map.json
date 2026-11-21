@@ -1,0 +1,1574 @@
+{
+  "songId": "sw01",
+  "title": "0時　郵政局",
+  "sourceMidi": "dr_20261108_0時　郵政局.mid",
+  "firstBarAtSeconds": 0,
+  "ticksPerBeat": 480,
+  "mp3DurationSeconds": 276.936,
+  "midiDurationSeconds": 260.625,
+  "bpm": 192,
+  "totalMappedBars": 209,
+  "tempoChanges": [
+    {
+      "tick": 0,
+      "tempo": 312500,
+      "bpm": 192.0
+    },
+    {
+      "tick": 238080,
+      "tempo": 312500,
+      "bpm": 192.0
+    }
+  ],
+  "timeSignatures": [
+    {
+      "tick": 0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "tick": 368640,
+      "numerator": 2,
+      "denominator": 4
+    },
+    {
+      "tick": 369600,
+      "numerator": 4,
+      "denominator": 4
+    }
+  ],
+  "markers": [
+    {
+      "tick": 0,
+      "name": "イントロ",
+      "seconds": 0.0,
+      "bar": 1
+    },
+    {
+      "tick": 53760,
+      "name": "1A",
+      "seconds": 35.0,
+      "bar": 29
+    },
+    {
+      "tick": 84480,
+      "name": "1A'",
+      "seconds": 55.0,
+      "bar": 45
+    },
+    {
+      "tick": 115200,
+      "name": "1サビ",
+      "seconds": 75.0,
+      "bar": 61
+    },
+    {
+      "tick": 145920,
+      "name": "間奏1",
+      "seconds": 95.0,
+      "bar": 77
+    },
+    {
+      "tick": 176640,
+      "name": "2A",
+      "seconds": 115.0,
+      "bar": 93
+    },
+    {
+      "tick": 207360,
+      "name": "間奏2",
+      "seconds": 135.0,
+      "bar": 109
+    },
+    {
+      "tick": 238080,
+      "name": "2A'",
+      "seconds": 155.0,
+      "bar": 125
+    },
+    {
+      "tick": 268800,
+      "name": "2A''",
+      "seconds": 175.0,
+      "bar": 141
+    },
+    {
+      "tick": 299520,
+      "name": "2サビ",
+      "seconds": 195.0,
+      "bar": 157
+    },
+    {
+      "tick": 369600,
+      "name": "アウトロ",
+      "seconds": 240.625,
+      "bar": 194
+    }
+  ],
+  "bars": [
+    {
+      "bar": 1,
+      "tick": 0,
+      "time": 0.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 2,
+      "tick": 1920,
+      "time": 1.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 3,
+      "tick": 3840,
+      "time": 2.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 4,
+      "tick": 5760,
+      "time": 3.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 5,
+      "tick": 7680,
+      "time": 5.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 6,
+      "tick": 9600,
+      "time": 6.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 7,
+      "tick": 11520,
+      "time": 7.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 8,
+      "tick": 13440,
+      "time": 8.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 9,
+      "tick": 15360,
+      "time": 10.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 10,
+      "tick": 17280,
+      "time": 11.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 11,
+      "tick": 19200,
+      "time": 12.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 12,
+      "tick": 21120,
+      "time": 13.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 13,
+      "tick": 23040,
+      "time": 15.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 14,
+      "tick": 24960,
+      "time": 16.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 15,
+      "tick": 26880,
+      "time": 17.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 16,
+      "tick": 28800,
+      "time": 18.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 17,
+      "tick": 30720,
+      "time": 20.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 18,
+      "tick": 32640,
+      "time": 21.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 19,
+      "tick": 34560,
+      "time": 22.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 20,
+      "tick": 36480,
+      "time": 23.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 21,
+      "tick": 38400,
+      "time": 25.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 22,
+      "tick": 40320,
+      "time": 26.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 23,
+      "tick": 42240,
+      "time": 27.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 24,
+      "tick": 44160,
+      "time": 28.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 25,
+      "tick": 46080,
+      "time": 30.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 26,
+      "tick": 48000,
+      "time": 31.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 27,
+      "tick": 49920,
+      "time": 32.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 28,
+      "tick": 51840,
+      "time": 33.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 29,
+      "tick": 53760,
+      "time": 35.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 30,
+      "tick": 55680,
+      "time": 36.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 31,
+      "tick": 57600,
+      "time": 37.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 32,
+      "tick": 59520,
+      "time": 38.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 33,
+      "tick": 61440,
+      "time": 40.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 34,
+      "tick": 63360,
+      "time": 41.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 35,
+      "tick": 65280,
+      "time": 42.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 36,
+      "tick": 67200,
+      "time": 43.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 37,
+      "tick": 69120,
+      "time": 45.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 38,
+      "tick": 71040,
+      "time": 46.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 39,
+      "tick": 72960,
+      "time": 47.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 40,
+      "tick": 74880,
+      "time": 48.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 41,
+      "tick": 76800,
+      "time": 50.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 42,
+      "tick": 78720,
+      "time": 51.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 43,
+      "tick": 80640,
+      "time": 52.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 44,
+      "tick": 82560,
+      "time": 53.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 45,
+      "tick": 84480,
+      "time": 55.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 46,
+      "tick": 86400,
+      "time": 56.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 47,
+      "tick": 88320,
+      "time": 57.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 48,
+      "tick": 90240,
+      "time": 58.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 49,
+      "tick": 92160,
+      "time": 60.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 50,
+      "tick": 94080,
+      "time": 61.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 51,
+      "tick": 96000,
+      "time": 62.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 52,
+      "tick": 97920,
+      "time": 63.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 53,
+      "tick": 99840,
+      "time": 65.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 54,
+      "tick": 101760,
+      "time": 66.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 55,
+      "tick": 103680,
+      "time": 67.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 56,
+      "tick": 105600,
+      "time": 68.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 57,
+      "tick": 107520,
+      "time": 70.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 58,
+      "tick": 109440,
+      "time": 71.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 59,
+      "tick": 111360,
+      "time": 72.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 60,
+      "tick": 113280,
+      "time": 73.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 61,
+      "tick": 115200,
+      "time": 75.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 62,
+      "tick": 117120,
+      "time": 76.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 63,
+      "tick": 119040,
+      "time": 77.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 64,
+      "tick": 120960,
+      "time": 78.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 65,
+      "tick": 122880,
+      "time": 80.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 66,
+      "tick": 124800,
+      "time": 81.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 67,
+      "tick": 126720,
+      "time": 82.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 68,
+      "tick": 128640,
+      "time": 83.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 69,
+      "tick": 130560,
+      "time": 85.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 70,
+      "tick": 132480,
+      "time": 86.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 71,
+      "tick": 134400,
+      "time": 87.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 72,
+      "tick": 136320,
+      "time": 88.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 73,
+      "tick": 138240,
+      "time": 90.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 74,
+      "tick": 140160,
+      "time": 91.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 75,
+      "tick": 142080,
+      "time": 92.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 76,
+      "tick": 144000,
+      "time": 93.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 77,
+      "tick": 145920,
+      "time": 95.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 78,
+      "tick": 147840,
+      "time": 96.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 79,
+      "tick": 149760,
+      "time": 97.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 80,
+      "tick": 151680,
+      "time": 98.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 81,
+      "tick": 153600,
+      "time": 100.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 82,
+      "tick": 155520,
+      "time": 101.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 83,
+      "tick": 157440,
+      "time": 102.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 84,
+      "tick": 159360,
+      "time": 103.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 85,
+      "tick": 161280,
+      "time": 105.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 86,
+      "tick": 163200,
+      "time": 106.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 87,
+      "tick": 165120,
+      "time": 107.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 88,
+      "tick": 167040,
+      "time": 108.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 89,
+      "tick": 168960,
+      "time": 110.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 90,
+      "tick": 170880,
+      "time": 111.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 91,
+      "tick": 172800,
+      "time": 112.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 92,
+      "tick": 174720,
+      "time": 113.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 93,
+      "tick": 176640,
+      "time": 115.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 94,
+      "tick": 178560,
+      "time": 116.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 95,
+      "tick": 180480,
+      "time": 117.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 96,
+      "tick": 182400,
+      "time": 118.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 97,
+      "tick": 184320,
+      "time": 120.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 98,
+      "tick": 186240,
+      "time": 121.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 99,
+      "tick": 188160,
+      "time": 122.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 100,
+      "tick": 190080,
+      "time": 123.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 101,
+      "tick": 192000,
+      "time": 125.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 102,
+      "tick": 193920,
+      "time": 126.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 103,
+      "tick": 195840,
+      "time": 127.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 104,
+      "tick": 197760,
+      "time": 128.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 105,
+      "tick": 199680,
+      "time": 130.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 106,
+      "tick": 201600,
+      "time": 131.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 107,
+      "tick": 203520,
+      "time": 132.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 108,
+      "tick": 205440,
+      "time": 133.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 109,
+      "tick": 207360,
+      "time": 135.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 110,
+      "tick": 209280,
+      "time": 136.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 111,
+      "tick": 211200,
+      "time": 137.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 112,
+      "tick": 213120,
+      "time": 138.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 113,
+      "tick": 215040,
+      "time": 140.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 114,
+      "tick": 216960,
+      "time": 141.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 115,
+      "tick": 218880,
+      "time": 142.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 116,
+      "tick": 220800,
+      "time": 143.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 117,
+      "tick": 222720,
+      "time": 145.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 118,
+      "tick": 224640,
+      "time": 146.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 119,
+      "tick": 226560,
+      "time": 147.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 120,
+      "tick": 228480,
+      "time": 148.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 121,
+      "tick": 230400,
+      "time": 150.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 122,
+      "tick": 232320,
+      "time": 151.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 123,
+      "tick": 234240,
+      "time": 152.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 124,
+      "tick": 236160,
+      "time": 153.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 125,
+      "tick": 238080,
+      "time": 155.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 126,
+      "tick": 240000,
+      "time": 156.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 127,
+      "tick": 241920,
+      "time": 157.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 128,
+      "tick": 243840,
+      "time": 158.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 129,
+      "tick": 245760,
+      "time": 160.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 130,
+      "tick": 247680,
+      "time": 161.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 131,
+      "tick": 249600,
+      "time": 162.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 132,
+      "tick": 251520,
+      "time": 163.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 133,
+      "tick": 253440,
+      "time": 165.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 134,
+      "tick": 255360,
+      "time": 166.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 135,
+      "tick": 257280,
+      "time": 167.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 136,
+      "tick": 259200,
+      "time": 168.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 137,
+      "tick": 261120,
+      "time": 170.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 138,
+      "tick": 263040,
+      "time": 171.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 139,
+      "tick": 264960,
+      "time": 172.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 140,
+      "tick": 266880,
+      "time": 173.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 141,
+      "tick": 268800,
+      "time": 175.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 142,
+      "tick": 270720,
+      "time": 176.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 143,
+      "tick": 272640,
+      "time": 177.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 144,
+      "tick": 274560,
+      "time": 178.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 145,
+      "tick": 276480,
+      "time": 180.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 146,
+      "tick": 278400,
+      "time": 181.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 147,
+      "tick": 280320,
+      "time": 182.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 148,
+      "tick": 282240,
+      "time": 183.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 149,
+      "tick": 284160,
+      "time": 185.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 150,
+      "tick": 286080,
+      "time": 186.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 151,
+      "tick": 288000,
+      "time": 187.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 152,
+      "tick": 289920,
+      "time": 188.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 153,
+      "tick": 291840,
+      "time": 190.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 154,
+      "tick": 293760,
+      "time": 191.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 155,
+      "tick": 295680,
+      "time": 192.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 156,
+      "tick": 297600,
+      "time": 193.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 157,
+      "tick": 299520,
+      "time": 195.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 158,
+      "tick": 301440,
+      "time": 196.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 159,
+      "tick": 303360,
+      "time": 197.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 160,
+      "tick": 305280,
+      "time": 198.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 161,
+      "tick": 307200,
+      "time": 200.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 162,
+      "tick": 309120,
+      "time": 201.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 163,
+      "tick": 311040,
+      "time": 202.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 164,
+      "tick": 312960,
+      "time": 203.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 165,
+      "tick": 314880,
+      "time": 205.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 166,
+      "tick": 316800,
+      "time": 206.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 167,
+      "tick": 318720,
+      "time": 207.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 168,
+      "tick": 320640,
+      "time": 208.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 169,
+      "tick": 322560,
+      "time": 210.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 170,
+      "tick": 324480,
+      "time": 211.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 171,
+      "tick": 326400,
+      "time": 212.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 172,
+      "tick": 328320,
+      "time": 213.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 173,
+      "tick": 330240,
+      "time": 215.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 174,
+      "tick": 332160,
+      "time": 216.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 175,
+      "tick": 334080,
+      "time": 217.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 176,
+      "tick": 336000,
+      "time": 218.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 177,
+      "tick": 337920,
+      "time": 220.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 178,
+      "tick": 339840,
+      "time": 221.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 179,
+      "tick": 341760,
+      "time": 222.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 180,
+      "tick": 343680,
+      "time": 223.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 181,
+      "tick": 345600,
+      "time": 225.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 182,
+      "tick": 347520,
+      "time": 226.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 183,
+      "tick": 349440,
+      "time": 227.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 184,
+      "tick": 351360,
+      "time": 228.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 185,
+      "tick": 353280,
+      "time": 230.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 186,
+      "tick": 355200,
+      "time": 231.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 187,
+      "tick": 357120,
+      "time": 232.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 188,
+      "tick": 359040,
+      "time": 233.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 189,
+      "tick": 360960,
+      "time": 235.0,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 190,
+      "tick": 362880,
+      "time": 236.25,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 191,
+      "tick": 364800,
+      "time": 237.5,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 192,
+      "tick": 366720,
+      "time": 238.75,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 193,
+      "tick": 368640,
+      "time": 240.0,
+      "numerator": 2,
+      "denominator": 4
+    },
+    {
+      "bar": 194,
+      "tick": 369600,
+      "time": 240.625,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 195,
+      "tick": 371520,
+      "time": 241.875,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 196,
+      "tick": 373440,
+      "time": 243.125,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 197,
+      "tick": 375360,
+      "time": 244.375,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 198,
+      "tick": 377280,
+      "time": 245.625,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 199,
+      "tick": 379200,
+      "time": 246.875,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 200,
+      "tick": 381120,
+      "time": 248.125,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 201,
+      "tick": 383040,
+      "time": 249.375,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 202,
+      "tick": 384960,
+      "time": 250.625,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 203,
+      "tick": 386880,
+      "time": 251.875,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 204,
+      "tick": 388800,
+      "time": 253.125,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 205,
+      "tick": 390720,
+      "time": 254.375,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 206,
+      "tick": 392640,
+      "time": 255.625,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 207,
+      "tick": 394560,
+      "time": 256.875,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 208,
+      "tick": 396480,
+      "time": 258.125,
+      "numerator": 4,
+      "denominator": 4
+    },
+    {
+      "bar": 209,
+      "tick": 398400,
+      "time": 259.375,
+      "numerator": 4,
+      "denominator": 4
+    }
+  ],
+  "note": "MIDI is 260.625s; MP3 is 276.936s. Sheet section labels from 2A' onward are 16 bars later than the MIDI marker positions. Original labels are preserved for reference; playback uses MIDI."
+}

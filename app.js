@@ -253,7 +253,7 @@
     return `<main class="page-scroll details-page" data-scroll="detail"><div class="detail-hero"><div class="detail-heading-row"><h1>${esc(song.title)}</h1>${song.driveFolderUrl?`<a class="song-folder-link" href="${esc(song.driveFolderUrl)}" target="_blank" rel="noopener noreferrer">${ico('archive')}</a>`:''}</div><div class="detail-metadata"><span>${esc(song.tuning)}</span><span>Capo ${capoText(song)}</span><span>${song.bpm} BPM</span><span>${time(song.durationSeconds)}</span></div></div>
     ${sections.length?`<div class="detail-tools"><button class="detail-add-column" data-action="detail-add-column" ${cols>=14?'disabled':''} title="追記列を追加">${ico('plus')}</button></div><div class="detail-lyrics-wrap" role="region" tabindex="0" aria-label="構成・歌詞・追記メモ"><div class="detail-lyrics-table ${cols===0?'detail-no-memos':''}" style="--detail-extra-count:${cols}">
       <div class="detail-lyrics-head detail-header-v11" role="rowgroup"><span class="detail-fixed-section">構成</span><span class="detail-fixed-lyrics">歌詞</span>
-      ${extra.columns.map((label,i)=>{const id=extra.columnIds[i],col=i+3,link=extra.descriptions[id]||'',url=safeLinkedUrl(link);return `<div class="detail-memo-title" style="grid-column:${col};grid-row:1"><input data-detail-title="${esc(id)}" value="${esc(label)}" maxlength="30" aria-label="追記メモの名前"><button data-action="detail-delete-column" data-column="${i}" aria-label="追記列を削除">${ico('trash')}</button></div><div class="detail-memo-link" style="grid-column:${col};grid-row:2"><textarea data-detail-desc="${esc(id)}" rows="1" maxlength="2000" aria-label="リンク・備考">${esc(link)}</textarea><a href="${esc(url||'#')}" ${url?'':'hidden'} target="_blank" rel="noopener noreferrer">↗</a>${audioWidget(link,id,extra.filenames[id])}</div><textarea class="detail-memo-overall" data-detail-overall="${esc(id)}" style="grid-column:${col};grid-row:3" rows="2" maxlength="5000" aria-label="全体の追記メモ">${esc(extra.overalls[id]||'')}</textarea>`;}).join('')}</div>
+      ${extra.columns.map((label,i)=>{const id=extra.columnIds[i],col=i+3,link=extra.descriptions[id]||'',url=safeLinkedUrl(link);return `<div class="detail-memo-title" style="grid-column:${col};grid-row:1"><input data-detail-title="${esc(id)}" value="${esc(label)}" maxlength="30" aria-label="追記メモの名前">${song.id==='sw01'&&i===0?`<button type="button" class="bp-open-button" data-action="open-bar-player" title="MIDI小節指定プレーヤーを開く" aria-label="小節指定プレーヤーを開く">▶ 小節で再生</button>`:''}<button data-action="detail-delete-column" data-column="${i}" aria-label="追記列を削除">${ico('trash')}</button></div><div class="detail-memo-link" style="grid-column:${col};grid-row:2"><textarea data-detail-desc="${esc(id)}" rows="1" maxlength="2000" aria-label="リンク・備考">${esc(link)}</textarea><a href="${esc(url||'#')}" ${url?'':'hidden'} target="_blank" rel="noopener noreferrer">↗</a>${audioWidget(link,id,extra.filenames[id])}</div><textarea class="detail-memo-overall" data-detail-overall="${esc(id)}" style="grid-column:${col};grid-row:3" rows="2" maxlength="5000" aria-label="全体の追記メモ">${esc(extra.overalls[id]||'')}</textarea>`;}).join('')}</div>
       ${sections.map((row,i)=>`<div class="detail-lyric-row" data-lyric-row="${i}" role="row"><div class="detail-structure">${esc(row.section)}</div><div class="detail-lyric-cell">${row.lyrics?`<div class="detail-lyric-text">${esc(row.lyrics)}</div>`:''}</div>${extra.columns.map((_,j)=>`<div class="detail-extra-cell detail-extra-inline"><textarea data-detail-cell="${esc(extra.columnIds[j])}" data-detail-row="${i}" maxlength="5000" rows="1" aria-label="${esc(row.section)}の追記メモ">${esc(extra.cells[i]?.[j]||'')}</textarea></div>`).join('')}</div>`).join('')}</div></div>`:'<div class="detail-placeholder">—</div>'}</main>`;
   }
   function openDetailEdit(row,column){
@@ -552,7 +552,7 @@
   }
   function moveEntry(kind,id,targetId){const list=slot(kind).entries;const from=list.findIndex(e=>e.id===id),to=list.findIndex(e=>e.id===targetId);if(from<0||to<0||from===to)return;const [entry]=list.splice(from,1);list.splice(to,0,entry);save();render();}
   function openData(){modalOpen=true;$modal.innerHTML=`<div class="overlay" data-action="overlay"><section class="dialog" role="dialog" aria-modal="true"><div class="dialog-head"><h2>データ</h2><button data-action="close-dialog" aria-label="閉じる">×</button></div><p>このテスト版の内容は使用端末のブラウザにのみ保存されます。</p><div class="dialog-actions"><button data-action="export-data">JSONバックアップを保存</button><button data-action="import-data">JSONを復元</button><button data-action="reset-samples">サンプルに戻す</button><input type="file" id="backup-input" accept=".json,application/json" hidden></div></section></div>`;}
-  function closeData(){modalOpen=false;$modal.innerHTML='';setTimeout(flushRemote,0);}
+  function closeData(){window.SaiwaiBarPlayer?.destroy();modalOpen=false;$modal.innerHTML='';setTimeout(flushRemote,0);}
   function downloadBackup(){const obj={app:'SaiwaiSan_TestPWA',version:11,exportedAt:new Date().toISOString(),state,metronome:window.KoryoMetronome?.snapshot()};const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const anchor=document.createElement('a');anchor.href=url;anchor.download='saiwaisan-test-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(anchor);anchor.click();anchor.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);toast('バックアップを保存しました');}
   async function readBackup(file){if(!file)return;if(file.size>8*1024*1024){toast('8MB以下のファイルを指定してください');return;}try{
       const obj=JSON.parse(await file.text());if(obj.app!=='SaiwaiSan_TestPWA'||!obj.state)throw Error('さいわいさん用のバックアップを選んでください');
@@ -590,12 +590,27 @@
     if(!['practice','setlist'].includes(kind)||!Number.isInteger(index)||index<0||index>=3||!name)return;
     (kind==='practice'?state.practiceSlots:state.setlistSlots)[index].name=name;save();closeData();render();
   }
+  function openBarPlayer(){
+    if(page!=='detail'||detailSong!=='sw01'||!window.SAIWAI_BAR_MAP||!window.SaiwaiBarPlayer)return;
+    const sections=KORYOSAN_DETAILS?.[detailSong]||[];
+    const extra=detailData(detailSong);
+    if(!sections.length||!extra.columns.length)return;
+    const reviewColumn=0;
+    const memoId=extra.columnIds[reviewColumn];
+    modalOpen=true;
+    window.SaiwaiBarPlayer.open({songTitle:songById.get(detailSong)?.title||'0時 郵政局',
+      reviewTitle:extra.columns[reviewColumn],sections,
+      comments:sections.map((_,i)=>extra.cells?.[i]?.[reviewColumn]||''),
+      overall:extra.overalls[memoId]||'',barMap:window.SAIWAI_BAR_MAP,
+      audioSrc:'./assets/yuseikyoku_demo_20261108.mp3',onClose:closeData});
+  }
   function action(el){const what=el.dataset.action;
     if(what==='tab'){page=el.dataset.page;detailSong=null;render();return;}
     if(what==='search-open'){openSearchResult(Number(el.dataset.index));return;}
     if(what==='account-filter'){accountingFilter=['all','income','expense'].includes(el.dataset.filter)?el.dataset.filter:'all';render();return;}
     if(what==='account-add'){state.accounting.push({id:guid(),type:'',date:localDate(),member:'',item:'',amount:'',notes:'',createdAt:Date.now()});accountingFilter='all';save();render();return;}
     if(what==='account-delete'){if(!confirm('削除しますか？'))return;state.accounting=state.accounting.filter(a=>a.id!==el.dataset.id);save();render();return;}
+    if(what==='open-bar-player'){openBarPlayer();return;}
     if(what==='audio-preview'){const holder=el.closest('.drive-audio')?.querySelector('.drive-iframe-holder');if(holder){holder.hidden=!holder.hidden;const frame=holder.querySelector('iframe');if(!holder.hidden&&!frame.src)frame.src=frame.dataset.previewUrl;}return;}
     if(what==='task-member'){const t=state.tasks.find(t=>t.id===el.dataset.id),member=el.dataset.member;if(!t||!TASK_MEMBERS.includes(member))return;t.members=t.members.includes(member)?t.members.filter(m=>m!==member):[...t.members,member];save();render();return;}
     if(what==='task-clone'){const t=state.tasks.find(x=>x.id===el.dataset.id);if(!t||!confirm(`「${t.name}」を複製しますか？`))return;state.tasks.unshift({...clone(t),id:guid(),createdAt:Date.now()});state.taskSort='deadline';save();render();return;}
