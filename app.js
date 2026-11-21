@@ -252,7 +252,7 @@
     const song=songById.get(detailSong);if(!song)return songsPage();const sections=KORYOSAN_DETAILS?.[song.id]||[],extra=detailData(song.id),cols=extra.columns.length;
     return `<main class="page-scroll details-page" data-scroll="detail"><div class="detail-hero"><div class="detail-heading-row"><h1>${esc(song.title)}</h1>${song.driveFolderUrl?`<a class="song-folder-link" href="${esc(song.driveFolderUrl)}" target="_blank" rel="noopener noreferrer">${ico('archive')}</a>`:''}</div><div class="detail-metadata"><span>${esc(song.tuning)}</span><span>Capo ${capoText(song)}</span><span>${song.bpm} BPM</span><span>${time(song.durationSeconds)}</span></div></div>
     ${sections.length?`<div class="detail-tools"><button class="detail-add-column" data-action="detail-add-column" ${cols>=14?'disabled':''} title="追記列を追加">${ico('plus')}</button></div><div class="detail-lyrics-wrap" role="region" tabindex="0" aria-label="構成・歌詞・追記メモ"><div class="detail-lyrics-table ${cols===0?'detail-no-memos':''}" style="--detail-extra-count:${cols}">
-      <div class="detail-player-tool-row" role="group" aria-label="追記メモの操作"><span class="detail-tool-fixed" aria-hidden="true"></span><span aria-hidden="true"></span>${extra.columns.map((_,i)=>`<div class="detail-player-tool-cell">${song.id==='sw01'&&i===0?`<button type="button" class="bp-open-button" data-action="open-bar-player" title="小節指定プレーヤーを開く" aria-label="小節指定プレーヤーを開く">△</button>`:''}</div>`).join('')}</div>
+      <div class="detail-player-tool-row" role="group" aria-label="追記メモの操作"><span class="detail-tool-fixed" aria-hidden="true"></span><span aria-hidden="true"></span>${extra.columns.map((_,i)=>`<div class="detail-player-tool-cell">${song.id==='sw01'&&i===0?`<button type="button" class="bp-open-button" data-action="open-bar-player" title="小節指定プレーヤーを開く" aria-label="小節指定プレーヤーを開く">◀️</button>`:''}</div>`).join('')}</div>
       <div class="detail-lyrics-head detail-header-v11" role="rowgroup"><span class="detail-fixed-section">構成</span><span class="detail-fixed-lyrics">歌詞</span>
       ${extra.columns.map((label,i)=>{const id=extra.columnIds[i],col=i+3;const mp3Name=extra.filenames[id]||(!safeLinkedUrl(extra.descriptions[id]||'')?extra.descriptions[id]||'':'');return `<div class="detail-memo-title" style="grid-column:${col};grid-row:1"><input data-detail-title="${esc(id)}" value="${esc(label)}" maxlength="30" aria-label="追記メモの名前"><button data-action="detail-delete-column" data-column="${i}" aria-label="追記列を削除">${ico('trash')}</button></div><div class="detail-memo-filename" style="grid-column:${col};grid-row:2"><textarea data-detail-filename="${esc(id)}" rows="2" maxlength="180" placeholder="MP3名" aria-label="MP3ファイル名（リンクではありません）">${esc(mp3Name)}</textarea></div><textarea class="detail-memo-overall" data-detail-overall="${esc(id)}" style="grid-column:${col};grid-row:3" rows="2" maxlength="5000" aria-label="全体の追記メモ">${esc(extra.overalls[id]||'')}</textarea>`;}).join('')}</div>
       ${sections.map((row,i)=>`<div class="detail-lyric-row" data-lyric-row="${i}" role="row"><div class="detail-structure">${esc(row.section)}</div><div class="detail-lyric-cell">${row.lyrics?`<div class="detail-lyric-text">${esc(row.lyrics)}</div>`:''}</div>${extra.columns.map((_,j)=>`<div class="detail-extra-cell detail-extra-inline"><textarea data-detail-cell="${esc(extra.columnIds[j])}" data-detail-row="${i}" maxlength="5000" rows="1" aria-label="${esc(row.section)}の追記メモ">${esc(extra.cells[i]?.[j]||'')}</textarea></div>`).join('')}</div>`).join('')}</div></div>`:'<div class="detail-placeholder">—</div>'}</main>`;
@@ -393,6 +393,16 @@
     el.style.height='auto';el.style.height=`${Math.max(25,el.scrollHeight)}px`;
   }
   function resizeAutos(node){node?.querySelectorAll('textarea:not(.task-form textarea)').forEach(resizeOne);}
+  // 追記メモの「全体コメント」欄は、最も文章の長い列に合わせて同じ高さまで広げる。
+  // textarea は CSS Grid 上で自動的に stretch しないブラウザがあるため、内容を測定して揃える。
+  function alignDetailOverallEditors(){
+    const boxes=[...document.querySelectorAll('.detail-header-v11 textarea.detail-memo-overall')];
+    if(!boxes.length)return;
+    boxes.forEach(box=>{box.style.height='auto';resizeOne(box);});
+    const height=Math.max(95,...boxes.map(box=>Math.ceil(box.getBoundingClientRect().height)));
+    boxes.forEach(box=>{box.style.height=height+'px';});
+  }
+
   function newTimeOptions(selected){return `<option value="" ${!selected?'selected':''}></option>`+fiveMinuteTimes.map(t=>`<option value="${t}" ${t===selected?'selected':''}>${t}</option>`).join('');}
   function scheduleCard(s){
     const today=localDate(),past=s.date<today;
@@ -537,10 +547,11 @@
   }
   function render(){storeScroll();window.KoryoMetronome?.unmount();
     $app.innerHTML=`${header()}<div class="app-content">${page==='tasks'?tasksPage():page==='songs'?songsPage():page==='detail'?detailsPage():page==='setlist'?setlistPage():page==='practice'?practicePage():page==='schedule'?schedulePage():page==='availability'?availabilityPage():page==='meeting'?meetingPage():page==='accounting'?accountingPage():page==='search'?searchPage():'<div id="metronome-root"></div>'}</div>${tabs()}`;
-    restoreScroll();if(page==='availability'){if(!availabilityRange)mountAvailability(localDate());else buildAvailability(availabilityRange.anchor,true);}resizeAutos($app);if(page==='metronome')window.KoryoMetronome?.mount(document.getElementById('metronome-root'));
+    restoreScroll();if(page==='availability'){if(!availabilityRange)mountAvailability(localDate());else buildAvailability(availabilityRange.anchor,true);}resizeAutos($app);if(page==='detail')alignDetailOverallEditors();if(page==='metronome')window.KoryoMetronome?.mount(document.getElementById('metronome-root'));
     document.title=`さいわいさん${page==='detail'?'｜楽譜・詳細':''}`;
     const nav=$app.querySelector('.tabbar'),active=nav?.querySelector('.tab.active');if(nav&&active&&nav.scrollWidth>nav.clientWidth)active.scrollIntoView({inline:'nearest',block:'nearest'});
   }
+  window.addEventListener('resize',()=>{if(page==='detail')alignDetailOverallEditors();});
   function updateTime(){
     const el=document.getElementById('remaining');if(!el)return;
     const isPractice=page==='practice',kind=isPractice?'practice':'setlist',s=slot(kind),used=sum(kind);
@@ -673,7 +684,7 @@
     }
     if(el.dataset.detailTitle && detailSong){const data=detailData(detailSong),i=data.columnIds.indexOf(el.dataset.detailTitle);if(i>=0){data.columns[i]=el.value.slice(0,30);state.detailEdits[detailSong]=data;saveDebounced();}return;}
     if(el.dataset.detailDesc && detailSong){const data=detailData(detailSong),id=el.dataset.detailDesc;if(data.columnIds.includes(id)){data.descriptions[id]=el.value.slice(0,2000);state.detailEdits[detailSong]=data;saveDebounced();resizeOne(el);}return;}
-    if(el.dataset.detailOverall && detailSong){const data=detailData(detailSong),id=el.dataset.detailOverall;if(data.columnIds.includes(id)){data.overalls[id]=el.value.slice(0,5000);state.detailEdits[detailSong]=data;saveDebounced();resizeOne(el);}return;}
+    if(el.dataset.detailOverall && detailSong){const data=detailData(detailSong),id=el.dataset.detailOverall;if(data.columnIds.includes(id)){data.overalls[id]=el.value.slice(0,5000);state.detailEdits[detailSong]=data;saveDebounced();alignDetailOverallEditors();}return;}
     if(el.dataset.detailFilename && detailSong){const data=detailData(detailSong),id=el.dataset.detailFilename;if(data.columnIds.includes(id)){data.filenames[id]=el.value.slice(0,180);state.detailEdits[detailSong]=data;saveDebounced();resizeOne(el);}return;}
     if(el.dataset.detailCell && detailSong){const data=detailData(detailSong),id=el.dataset.detailCell,i=data.columnIds.indexOf(id),row=Number(el.dataset.detailRow);if(i>=0&&row>=0){const cells=data.cells[row]||[];cells[i]=el.value.slice(0,5000);data.cells[row]=cells;state.detailEdits[detailSong]=data;saveDebounced();resizeOne(el);}return;}
 

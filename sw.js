@@ -1,5 +1,5 @@
-const CACHE='saiwaisan-test-static-v13';
-const FILES=['./','./index.html','./manifest.webmanifest','./styles.css?v=test13','./cloud-model.js?v=test13','./seed-data.js?v=test13','./bootstrap.js?v=test13','./app.js?v=test13','./metronome.js?v=test13','./bar-map.js?v=test13','./bar-player.js?v=test13','./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png'];
+const CACHE='saiwaisan-test-static-v14';
+const FILES=['./','./index.html','./manifest.webmanifest','./styles.css?v=test14','./cloud-model.js?v=test14','./seed-data.js?v=test14','./bootstrap.js?v=test14','./app.js?v=test14','./metronome.js?v=test14','./bar-map.js?v=test14','./bar-player.js?v=test14','./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(x=>x.startsWith('saiwaisan-test-static-')&&x!==CACHE).map(x=>caches.delete(x)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',e=>{const req=e.request;if(req.method!=='GET'||new URL(req.url).origin!==location.origin)return;if(new URL(req.url).pathname.endsWith('.mp3'))return; /* Network/browser handles HTTP Range for audio. */e.respondWith(caches.match(req).then(saved=>saved||fetch(req).then(r=>{if(r.ok)caches.open(CACHE).then(c=>c.put(req,r.clone()));return r;})).catch(()=>caches.match('./index.html')));});

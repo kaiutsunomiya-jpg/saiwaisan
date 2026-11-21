@@ -755,3 +755,10 @@ body{background:#f1f8f3;color:#1f4130}
 
 /* TEST v13: 上3行をひとつのヘッダーとして見せる。構成の見出しは上端に配置。 */
 .detail-header-v11>.detail-fixed-section,.detail-header-v11>.detail-fixed-lyrics{align-items:flex-start!important;padding-top:12px!important}
+
+/* TEST v14: filled media-control triangle and seamless third memo row. */
+.detail-player-tool-cell .bp-open-button{display:inline-flex;align-items:center;justify-content:center;width:38px;height:31px;background:#258951;border:1px solid #21814b;color:#fff;border-radius:8px;font-family:Arial,sans-serif;font-size:18px;font-weight:800;line-height:1;padding:0;box-shadow:0 1px 2px #164d2926} 
+.detail-player-tool-cell .bp-open-button:hover{background:#1b7343;border-color:#1b7343}
+.detail-player-tool-cell .bp-open-button:active{transform:translateY(1px)}
+.detail-header-v11 textarea.detail-memo-overall{box-sizing:border-box;display:block;max-height:none;overflow-y:auto;resize:vertical;}
+@media(max-width:699px){.detail-player-tool-cell .bp-open-button{width:35px;height:29px;font-size:17px;}}
