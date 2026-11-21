@@ -732,3 +732,26 @@ body{background:#f1f8f3;color:#1f4130}
  .bp-review-heading>span{padding:10px 7px}.bp-review-row .bp-review-section{padding:9px 7px}.bp-review-section button{font-size:11px}.bp-review-text{padding:10px;font-size:12px;line-height:1.6}
 }
 @media(max-width:359px){.bp-go{width:100%;justify-content:flex-end}.bp-seek-actions{row-gap:5px}.bp-audio-meta{font-size:9px}.bp-bar-meta .bp-beat{margin-left:0}.bp-follow{font-size:9px}}
+
+/* TEST v13: 構成1列だけを固定。MP3名はリンク化せず自由記述。*/
+.detail-lyrics-table .detail-player-tool-row{display:grid;width:max-content;min-width:100%;grid-template-columns:var(--detail-structure-width) var(--detail-lyrics-width) repeat(var(--detail-extra-count),var(--detail-extra-width));align-items:center;min-height:36px;background:#f4faf6;box-shadow:0 1px 0 #cee8d5}
+.detail-player-tool-cell{min-width:0;display:flex;align-items:center;justify-content:flex-start;padding:3px 8px;min-height:36px}
+.detail-player-tool-row .detail-tool-fixed{position:sticky;left:0;z-index:6;background:#f4faf6;align-self:stretch;box-shadow:1px 0 #d1ebd9}
+.detail-player-tool-cell .bp-open-button{display:inline-grid;place-items:center;width:35px;height:28px;border-radius:7px;border:1px solid #a4d0b1;color:#1f7445;background:#daf2e1;font-size:19px;font-weight:800;line-height:1;cursor:pointer;padding:0}
+.detail-player-tool-cell .bp-open-button:hover{background:#bde6c9}
+.detail-header-v11 .detail-memo-filename{display:flex;align-items:stretch;min-width:0;background:#f7fcf9;border-left:1px solid #bedfca;border-top:1px solid #cfe6d7;padding:3px 8px}
+.detail-header-v11 .detail-memo-filename textarea{display:block;flex:1;width:100%;min-width:0;min-height:42px;height:54px;border:0;resize:none;background:transparent;outline-offset:0;overflow:hidden;font-size:12px;line-height:1.6;padding:7px 3px;color:#315e43;white-space:pre-wrap;overflow-wrap:anywhere}
+.detail-header-v11 .detail-memo-filename textarea:focus{background:#fff;outline:1px solid #a0cdb1;border-radius:3px}
+.detail-header-v11 .detail-memo-filename textarea::placeholder{font-size:11px;color:#a0b8a8}
+.detail-header-v11>.detail-fixed-section{position:sticky;left:0;z-index:11}
+.detail-header-v11>.detail-fixed-lyrics{position:relative;left:auto;z-index:1}
+.detail-lyric-row .detail-structure{position:sticky;left:0;z-index:2}
+.detail-lyric-row .detail-lyric-cell{position:relative;left:auto;z-index:0}
+/* 不要になった再生情報は表示しない。 */
+.bp-eyebrow,.bp-audio-meta,.bp-beat,.bp-warning{display:none!important}
+.bp-audio-availability:empty{display:none}
+.bp-go input::placeholder{color:transparent}
+@media(max-width:699px){.detail-player-tool-cell{padding:4px 5px}.detail-player-tool-cell .bp-open-button{width:33px;height:28px}.detail-header-v11 .detail-memo-filename textarea{font-size:11px}}
+
+/* TEST v13: 上3行をひとつのヘッダーとして見せる。構成の見出しは上端に配置。 */
+.detail-header-v11>.detail-fixed-section,.detail-header-v11>.detail-fixed-lyrics{align-items:flex-start!important;padding-top:12px!important}
